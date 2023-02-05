@@ -1,5 +1,7 @@
 bot:
   token: '0'
+  enabled_chats:
+    - -1001805888006
 
 
 enginetribe_api:

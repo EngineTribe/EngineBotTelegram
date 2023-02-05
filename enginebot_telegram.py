@@ -472,6 +472,14 @@ async def unban_handler(message: types.Message):
         )
 
 
+'''
+@dispatcher.message_handler(commands=['get_id'])
+async def get_id(message: types.Message):
+    await message.reply(
+        message.chat.id
+    )
+'''
+
 app = FastAPI()
 
 
@@ -486,6 +494,57 @@ async def startup_event():
 @app.on_event('shutdown')
 async def shutdown_event():
     await dispatcher.stop_polling()
+
+
+@app.post('/enginetribe')
+async def enginetribe_payload(request: Request):
+    webhook: dict = await request.json()
+    message: str = ''
+    match webhook["type"]:
+        case 'new_arrival':  # new arrival
+            message = f'📤 {webhook["author"]} uploaded a new level: {webhook["level_name"]}\n' \
+                      f'ID: {webhook["level_id"]}'
+        case 'new_featured':  # new featured
+            message = f'🌟 {webhook["level_name"]} of {webhook["author"]} ' \
+                      f'has been added to the featured levels, come and play!\n' \
+                      f'ID: {webhook["level_id"]}'
+        case 'permission_change':
+            permission_name = {'booster': 'booster', 'mod': 'stage moderator'}[webhook['permission']]
+            message = f"{'🤗' if webhook['value'] else '😥'} " \
+                      f"{webhook['username']} {'gained' if webhook['value'] else 'lost'} " \
+                      f"{permission_name} role of Engine Tribe!"
+        case _:
+            if 'likes' in webhook["type"]:  # 10/100/1000 likes
+                message = f'🎉 Congratulations, {webhook["author"]}\'s level {webhook["level_name"]} has gained ' \
+                          f'{webhook["type"].replace("_likes", "")} likes!\n' \
+                          f'ID: {webhook["level_id"]}'
+            if 'plays' in webhook["type"]:  # 100/1000 plays
+                message = f'🎉 Congratulations, {webhook["author"]}\'s level {webhook["level_name"]} has been played ' \
+                          f'{webhook["type"].replace("_plays", "")} times!\n' \
+                          f'ID: {webhook["level_id"]}'
+            if 'deaths' in webhook["type"]:  # 100/1000 deaths
+                message = f'🔪 {webhook["author"]}\'s level {webhook["level_name"]} has obtained ' \
+                          f'{webhook["type"].replace("_deaths", "")} deaths, come and challenge this level!\n' \
+                          f'ID: {webhook["level_id"]}'
+            if 'clears' in webhook["type"]:  # 100/1000 clears
+                message = f'🎉 Congratulations, {webhook["author"]}\'s level {webhook["level_name"]} has been cleared ' \
+                          f'{webhook["type"].replace("_clears", "")} times, come and play!\n' \
+                          f'ID: {webhook["level_id"]}'
+    if message != '':
+        for chat_id in BOT_ENABLED_CHATS:
+            await bot.send_message(
+                chat_id=chat_id,
+                text=message
+            )
+        return 'Success'
+    else:
+        import json
+        for chat_id in BOT_ENABLED_CHATS:
+            await bot.send_message(
+                chat_id=chat_id,
+                text=f'{json.dumps(webhook, ensure_ascii=False)}'
+            )
+        return 'NotImplemented'
 
 
 def run():
