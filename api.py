@@ -143,8 +143,7 @@ async def random_level(
                 'User-Agent': 'EngineBot'
             }
     ) as response:
-        print(await response.json())
-        return (await response.json())['result']
+        return (await response.json())
 
 
 async def query_level(
@@ -161,4 +160,4 @@ async def query_level(
                 'User-Agent': 'EngineBot'
             }
     ) as response:
-        return (await response.json())['result']
+        return (await response.json())
