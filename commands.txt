@@ -1,0 +1,12 @@
+# Used in Bot Father
+# /setcommands
+
+register - 📝 Register to start playing SMM:WE.
+change_password - 🔐 Change your password.
+levels - 📊 Get levels by yourself or certain user.
+server_stats - 📊 Get server statistics.
+query_level - 🔍 Query level
+random_level - 🎲 Get a random level
+permission - 🔒 Change user's permission.
+ban - 🔨 Ban user
+unban - 🔓 Unban user
