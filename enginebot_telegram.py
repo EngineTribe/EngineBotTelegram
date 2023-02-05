@@ -58,6 +58,20 @@ async def register_handler(message: types.Message):
                      f'Command usage incorrect: Password must be between 7 and 30 characters long.'
             )
             return
+        elif not username.isalnum():
+            await bot.send_message(
+                chat_id=message.chat.id,
+                text=f'❌ @{message.from_user.username}\n'
+                     f'Command usage incorrect: Username must contain only letters and numbers.'
+            )
+            return
+        elif not password.isalnum():
+            await bot.send_message(
+                chat_id=message.chat.id,
+                text=f'❌ @{message.from_user.username}\n'
+                     f'Command usage incorrect: Password must contain only letters and numbers.'
+            )
+            return
         else:
             # Perform register
             try:
@@ -123,6 +137,13 @@ async def change_password_handler(message: types.Message):
                 chat_id=message.chat.id,
                 text=f'❌ @{message.from_user.username}\n'
                      f'Command usage incorrect: Password must be between 7 and 30 characters long.'
+            )
+            return
+        elif not password.isalnum():
+            await bot.send_message(
+                chat_id=message.chat.id,
+                text=f'❌ @{message.from_user.username}\n'
+                     f'Command usage incorrect: Password must contain only letters and numbers.'
             )
             return
         else:
