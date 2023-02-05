@@ -13,5 +13,5 @@ pip install -r requirements.txt
 ### Usage
 
 ```bash
-python3 -m enginebot_qq
+python3 -m enginebot_telegram
 ```
